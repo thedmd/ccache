@@ -30,6 +30,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <WinSock2.h>
 #include <sys/locking.h>
 #include <psapi.h>
 #include <tchar.h>
@@ -106,6 +107,8 @@ path_max(const char *path)
 	} else {
 		return 4096;
 	}
+#elif defined(_MSC_VER)
+    return 4096;
 #endif
 }
 

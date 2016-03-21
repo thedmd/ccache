@@ -21,7 +21,9 @@
 
 #include "config.h"
 
+#ifndef _MSC_VER
 #include <sys/file.h>
+#endif
 #ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
 #endif
@@ -33,7 +35,14 @@
 
 #include <assert.h>
 #include <ctype.h>
+#ifdef _MSC_VER
+#include "windirent.h"
+#include <io.h>
+#include <process.h>
+#include <direct.h>
+#else
 #include <dirent.h>
+#endif
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -44,12 +53,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _MSC_VER
 #include <strings.h>
+#endif
 #include <time.h>
+#ifdef _MSC_VER
+#include <sys/utime.h>
+#else
 #include <unistd.h>
 #include <utime.h>
+#endif
+#ifdef _MSC_VER
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
+#ifndef _MSC_VER
 extern char **environ;
+#endif
 
 #ifndef ESTALE
 #define ESTALE -1
@@ -86,6 +107,13 @@ typedef bool _Bool;
 #  define false 0
 #  define true 1
 #  define __bool_true_false_are_defined 1
+#endif
+
+#ifdef _MSC_VER
+typedef int pid_t;
+
+typedef intptr_t ssize_t;
+static_assert(sizeof(size_t) == sizeof(ssize_t), "size_t and ssize_t are not of same size");
 #endif
 
 #endif /* CCACHE_SYSTEM_H */

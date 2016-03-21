@@ -193,8 +193,8 @@ cleanup_dir(struct conf *conf, const char *dir)
 
 	cc_log("Cleaning up cache directory %s", dir);
 
-	cache_size_threshold = conf->max_size * LIMIT_MULTIPLE / 16;
-	files_in_cache_threshold = conf->max_files * LIMIT_MULTIPLE / 16;
+	cache_size_threshold = (uint64_t)(conf->max_size * LIMIT_MULTIPLE / 16);
+	files_in_cache_threshold = (size_t)(conf->max_files * LIMIT_MULTIPLE / 16);
 
 	num_files = 0;
 	cache_size = 0;

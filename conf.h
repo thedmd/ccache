@@ -20,7 +20,7 @@ struct conf {
 	char *ignore_headers_in_manifest;
 	bool keep_comments_cpp;
 	char *log_file;
-	unsigned max_files;
+	unsigned int max_files;
 	uint64_t max_size;
 	char *path;
 	char *prefix_command;
@@ -29,10 +29,10 @@ struct conf {
 	bool read_only_direct;
 	bool recache;
 	bool run_second_cpp;
-	unsigned sloppiness;
+	unsigned int sloppiness;
 	bool stats;
 	char *temporary_dir;
-	unsigned umask;
+	unsigned int umask;
 	bool unify;
 
 	const char **item_origins;

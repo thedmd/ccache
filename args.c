@@ -304,7 +304,7 @@ args_to_string(struct args *args)
 {
 	char *result;
 	char **p;
-	unsigned size = 0;
+	size_t size = 0;
 	int pos;
 	for (p = args->argv; *p; p++) {
 		size += strlen(*p) + 1;

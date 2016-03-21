@@ -20,7 +20,7 @@
 #define COUNTERS_H
 
 struct counters {
-	unsigned *data;   /* counter value */
+    unsigned int *data;   /* counter value */
 	size_t size;      /* logical array size */
 	size_t allocated; /* allocated size */
 };

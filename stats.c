@@ -31,7 +31,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 
 extern char *stats_file;
 extern struct conf *conf;
@@ -159,7 +161,7 @@ init_counter_updates(void)
  * is in bytes.
  */
 void
-stats_update_size(uint64_t size, unsigned files)
+stats_update_size(uint64_t size, size_t files)
 {
 	init_counter_updates();
 	counter_updates->data[STATS_NUMFILES] += files;
@@ -376,7 +378,7 @@ stats_zero(void)
 
 /* Get the per directory limits */
 void
-stats_get_obsolete_limits(const char *dir, unsigned *maxfiles,
+stats_get_obsolete_limits(const char *dir, size_t *maxfiles,
                           uint64_t *maxsize)
 {
 	struct counters *counters = counters_init(STATS_END);
@@ -390,7 +392,7 @@ stats_get_obsolete_limits(const char *dir, unsigned *maxfiles,
 
 /* set the per directory sizes */
 void
-stats_set_sizes(const char *dir, unsigned num_files, uint64_t total_size)
+stats_set_sizes(const char *dir, size_t num_files, uint64_t total_size)
 {
 	struct counters *counters = counters_init(STATS_END);
 	char *statsfile;

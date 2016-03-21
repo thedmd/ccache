@@ -1999,8 +1999,12 @@ is_precompiled_header(const char *path)
 static bool
 color_output_possible(void)
 {
+# ifndef _MSC_VER
 	const char *term_env = getenv("TERM");
 	return isatty(STDERR_FILENO) && term_env && strcasecmp(term_env, "DUMB") != 0;
+# else
+    return false;
+# endif
 }
 
 /*
@@ -3039,7 +3043,7 @@ initialize(void)
 	       CCACHE_VERSION);
 
 	if (conf->umask != UINT_MAX) {
-		umask(conf->umask);
+		_umask(conf->umask);
 	}
 }
 

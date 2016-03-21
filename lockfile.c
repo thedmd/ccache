@@ -81,7 +81,7 @@ lockfile_acquire(const char *path, unsigned staleness_limit)
 			}
 			free(content);
 			content = x_malloc(bufsize);
-			if ((len = read(fd, content, bufsize - 1)) == -1) {
+			if ((len = read(fd, content, (int)(bufsize - 1))) == -1) {
 				cc_log("lockfile_acquire: read %s: %s", lockfile, strerror(errno));
 				close(fd);
 				goto out;
@@ -90,7 +90,7 @@ lockfile_acquire(const char *path, unsigned staleness_limit)
 			content[len] = '\0';
 		} else {
 			/* We got the lock. */
-			if (write(fd, my_content, strlen(my_content)) == -1) {
+			if (write(fd, my_content, (int)strlen(my_content)) == -1) {
 				cc_log("lockfile_acquire: write %s: %s", lockfile, strerror(errno));
 				close(fd);
 				x_unlink(lockfile);

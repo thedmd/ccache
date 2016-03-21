@@ -21,13 +21,13 @@
 #include "macroskip.h"
 #include "murmurhashneutral2.h"
 
-unsigned
+unsigned int
 hash_from_string(void *str)
 {
-	return murmurhashneutral2(str, strlen((const char *)str), 0);
+	return murmurhashneutral2(str, (int)strlen((const char *)str), 0);
 }
 
-unsigned
+unsigned int
 hash_from_int(int i)
 {
 	return murmurhashneutral2(&i, sizeof(int), 0);

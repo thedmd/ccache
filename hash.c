@@ -84,7 +84,7 @@ hash_string(struct mdfour *md, const char *s)
 }
 
 void
-hash_string_length(struct mdfour *md, const char *s, int length)
+hash_string_length(struct mdfour *md, const char *s, size_t length)
 {
 	hash_buffer(md, s, length);
 }

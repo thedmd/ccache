@@ -15,7 +15,11 @@
 #endif
 
 #ifndef MYNAME
+#ifdef _WIN32
+#define MYNAME "ccache.exe"
+#else
 #define MYNAME "ccache"
+#endif
 #endif
 
 extern const char CCACHE_VERSION[];
@@ -108,7 +112,7 @@ void hash_result_as_bytes(struct mdfour *md, unsigned char *out);
 bool hash_equal(struct mdfour *md1, struct mdfour *md2);
 void hash_delimiter(struct mdfour *md, const char *type);
 void hash_string(struct mdfour *md, const char *s);
-void hash_string_length(struct mdfour *md, const char *s, int length);
+void hash_string_length(struct mdfour *md, const char *s, size_t length);
 void hash_int(struct mdfour *md, int x);
 bool hash_fd(struct mdfour *md, int fd);
 bool hash_file(struct mdfour *md, const char *fname);
@@ -187,10 +191,10 @@ void stats_flush(void);
 unsigned stats_get_pending(enum stats stat);
 void stats_zero(void);
 void stats_summary(struct conf *conf);
-void stats_update_size(uint64_t size, unsigned files);
-void stats_get_obsolete_limits(const char *dir, unsigned *maxfiles,
+void stats_update_size(uint64_t size, size_t files);
+void stats_get_obsolete_limits(const char *dir, size_t *maxfiles,
                                uint64_t *maxsize);
-void stats_set_sizes(const char *dir, unsigned num_files, uint64_t total_size);
+void stats_set_sizes(const char *dir, size_t num_files, uint64_t total_size);
 void stats_read(const char *path, struct counters *counters);
 void stats_write(const char *path, struct counters *counters);
 
@@ -262,21 +266,41 @@ char *win32argvtos(char *prefix, char **argv);
 char *win32getshell(char *path);
 int win32execute(char *path, char **argv, int doreturn,
                  int fd_stdout, int fd_stderr);
+void win32usleep(size_t time);
 void add_exe_ext_if_no_to_fullpath(char *full_path_win_ext, size_t max_size,
                                    const char *ext, const char *path);
 #    ifndef _WIN32_WINNT
 #    define _WIN32_WINNT 0x0501
 #    endif
 #    include <windows.h>
-#    define mkdir(a,b) mkdir(a)
+#    define open    _open
+#    define close   _close
+#    define read    _read
+#    define write   _write
+#    define lseek   _lseek
+#    define mktemp  _mktemp
+#    define mask    _mask
+#    define unlink  _unlink
+#    define spawnv  _spawnv
+#    define getpid  _getpid
+#    define putenv  _putenv
+#    define strdup  _strdup
+#    define dup     _dup
+#    define getcwd  _getcwd
+#    define fdopen  _fdopen
+#    define strcasecmp _stricmp
+#    define mkdir(a,b) _mkdir(a)
 #    define link(src,dst) (CreateHardLink(dst,src,NULL) ? 0 : -1)
 #    define lstat(a,b) stat(a,b)
 #    define execv(a,b) win32execute(a,b,0,-1,-1)
 #    define execute(a,b,c,d) win32execute(*(a),a,1,b,c)
+#    define usleep(a) win32usleep(a)
 #    define DIR_DELIM_CH '/'
 #    define PATH_DELIM ";"
 #    define F_RDLCK 0
 #    define F_WRLCK 0
+#    define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#    define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #else
 #    define DIR_DELIM_CH '\\'
 #    define PATH_DELIM ":"
