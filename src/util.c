@@ -267,6 +267,61 @@ copy_fd(int fd_in, int fd_out)
 	gzclose(gz_in);
 }
 
+#ifdef _WIN32
+# define MAX_UNC_PATH 8192
+typedef char win32_unc_path_t[MAX_UNC_PATH];
+
+// Convert local paths to UNC style paths
+static void win32_path_to_unc(const char* source, win32_unc_path_t path)
+{
+    strcpy(path, "\\\\?\\");
+    if (!is_absolute_path(source)) {
+        _getcwd(path + 4, MAX_UNC_PATH - 4);
+        strncat(path, "\\", MAX_UNC_PATH);
+    }
+
+    char* out = path + strlen(path);
+    char* end = path + MAX_UNC_PATH;
+    char* start = out;
+    for (const char* t = source; *t && out < end; ++t)
+        *out++ = (*t == '/') ? '\\' : *t;
+    if (out < end)
+        *out = '\0';
+    else
+        path[MAX_UNC_PATH - 1] = '\0';
+
+    char* where = start;
+    while ((where = strstr(where, "\\\\"))) {
+        memmove(where, where + 1, strlen(where));
+        ++where;
+    }
+
+    where = start;
+    while ((where = strstr(where, "\\.."))) {
+        char* sep = where - 1;
+        while (true)
+        {
+            if (*sep == '\\')
+                break;
+
+            if (sep == start)
+            {
+                sep = NULL;
+                break;
+            }
+
+            --sep;
+        }
+        if (sep != NULL)
+        {
+            memmove(sep, where + 3, strlen(where) - 2);
+            where = sep;
+        }
+    }
+}
+
+#endif
+
 #ifndef HAVE_MKSTEMP
 // Cheap and nasty mkstemp replacement.
 int
@@ -280,7 +335,9 @@ mkstemp(char *template)
 #ifdef __GNUC__
 	#pragma GCC diagnostic pop
 #endif
-	return open(template, O_RDWR | O_CREAT | O_EXCL | O_BINARY, 0600);
+    win32_unc_path_t unc_template;
+    win32_path_to_unc(template, unc_template);
+	return open(unc_template, O_RDWR | O_CREAT | O_EXCL | O_BINARY, 0600);
 }
 #endif
 
@@ -317,7 +374,9 @@ copy_file(const char *src, const char *dest, int compress_level)
 	       src, dest, tmp_name, compress_level > 0 ? "" : "un");
 
 	// Open source file.
-	int fd_in = open(src, O_RDONLY | O_BINARY);
+    win32_unc_path_t unc_src;
+    win32_path_to_unc(src, unc_src);
+	int fd_in = open(unc_src, O_RDONLY | O_BINARY);
 	if (fd_in == -1) {
 		saved_errno = errno;
 		cc_log("open error: %s", strerror(saved_errno));
@@ -474,7 +533,9 @@ move_uncompressed_file(const char *src, const char *dest, int compress_level)
 bool
 file_is_compressed(const char *filename)
 {
-	FILE *f = fopen(filename, "rb");
+    win32_unc_path_t unc_filename;
+    win32_path_to_unc(filename, unc_filename);
+	FILE *f = fopen(unc_filename, "rb");
 	if (!f) {
 		return false;
 	}
@@ -493,15 +554,17 @@ file_is_compressed(const char *filename)
 int
 create_dir(const char *dir)
 {
+    win32_unc_path_t unc_dir;
+    win32_path_to_unc(dir, unc_dir);
 	struct stat st;
-	if (stat(dir, &st) == 0) {
+	if (stat(unc_dir, &st) == 0) {
 		if (S_ISDIR(st.st_mode)) {
 			return 0;
 		}
 		errno = ENOTDIR;
 		return 1;
 	}
-	if (mkdir(dir, 0777) != 0 && errno != EEXIST) {
+	if (mkdir(unc_dir, 0777) != 0 && errno != EEXIST) {
 		return 1;
 	}
 	return 0;
@@ -513,8 +576,10 @@ create_parent_dirs(const char *path)
 {
 	int res;
 	char *parent = dirname(path);
+    win32_unc_path_t unc_parent;
+    win32_path_to_unc(parent, unc_parent);
 	struct stat st;
-	if (stat(parent, &st) == 0) {
+	if (stat(unc_parent, &st) == 0) {
 		if (S_ISDIR(st.st_mode)) {
 			res = 0;
 		} else {
@@ -524,7 +589,7 @@ create_parent_dirs(const char *path)
 	} else {
 		res = create_parent_dirs(parent);
 		if (res == 0) {
-			res = mkdir(parent, 0777);
+			res = mkdir(unc_parent, 0777);
 			// Have to handle the condition of the directory already existing because
 			// the file system could have changed in between calling stat and
 			// actually creating the directory. This can happen when there are
@@ -815,7 +880,9 @@ x_fstat(int fd, struct stat *buf)
 int
 x_lstat(const char *pathname, struct stat *buf)
 {
-	int result = lstat(pathname, buf);
+    win32_unc_path_t unc_pathname;
+    win32_path_to_unc(pathname, unc_pathname);
+	int result = lstat(unc_pathname, buf);
 	if (result != 0) {
 		cc_log("Failed to lstat %s: %s", pathname, strerror(errno));
 	}
@@ -826,7 +893,9 @@ x_lstat(const char *pathname, struct stat *buf)
 int
 x_stat(const char *pathname, struct stat *buf)
 {
-	int result = stat(pathname, buf);
+    win32_unc_path_t unc_pathname;
+    win32_path_to_unc(pathname, unc_pathname);
+	int result = stat(unc_pathname, buf);
 	if (result != 0) {
 		cc_log("Failed to stat %s: %s", pathname, strerror(errno));
 	}
@@ -1494,10 +1563,14 @@ x_rename(const char *oldpath, const char *newpath)
 #ifndef _WIN32
 	return rename(oldpath, newpath);
 #else
+    win32_unc_path_t uncoldpath, uncnewpath;
+    win32_path_to_unc(oldpath, uncoldpath);
+    win32_path_to_unc(newpath, uncnewpath);
+
 	// Windows' rename() refuses to overwrite an existing file.
-	unlink(newpath); // Not x_unlink, as x_unlink calls x_rename.
+	unlink(uncnewpath); // Not x_unlink, as x_unlink calls x_rename.
 	// If the function succeeds, the return value is nonzero.
-	if (MoveFileA(oldpath, newpath) == 0) {
+	if (MoveFileA(uncoldpath, uncnewpath) == 0) {
 		LPVOID lp_msg_buf;
 		DWORD dw = GetLastError();
 		FormatMessage(
@@ -1546,7 +1619,9 @@ tmp_unlink(const char *path)
 static int
 do_x_unlink(const char *path, bool log_failure)
 {
-	int saved_errno = 0;
+    win32_unc_path_t unc_tmp_name;
+
+    int saved_errno = 0;
 
 	// If path is on an NFS share, unlink isn't atomic, so we rename to a temp
 	// file. We don't care if the temp file is trashed, so it's always safe to
@@ -1559,7 +1634,9 @@ do_x_unlink(const char *path, bool log_failure)
 		saved_errno = errno;
 		goto out;
 	}
-	if (unlink(tmp_name) == -1) {
+
+    win32_path_to_unc(tmp_name, unc_tmp_name);
+	if (unlink(unc_tmp_name) == -1) {
 		// If it was released in a race, that's OK.
 		if (errno != ENOENT && errno != ESTALE) {
 			result = -1;
