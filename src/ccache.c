@@ -767,7 +767,10 @@ make_relative_path(char *path)
 
 #ifdef _WIN32
 	if (path[0] == '/') {
-		path++;  // Skip leading slash.
+        // thedmd: Later `path` is used in free() function, don't change
+        //         address.
+        memmove(path, path + 1, strlen(path));
+		//path++;  // Skip leading slash.
 	}
 #endif
 

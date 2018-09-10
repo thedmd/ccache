@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ccache">
+      <UniqueIdentifier>{bf6124f9-69ff-4d8f-93cc-b630e3626a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ccache\3rd party sources">
+      <UniqueIdentifier>{ee1c1c1f-abba-4bad-9ed5-56efd7ada5a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win32">
+      <UniqueIdentifier>{c502bc80-97f4-4c4e-9930-f3b45472996b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="generated">
+      <UniqueIdentifier>{7650c725-e4d4-4b43-b3d5-d35f6538e66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win32\stub">
+      <UniqueIdentifier>{5079b633-6c6f-4c35-9cf0-b3f056663181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="win32\stub\sys">
+      <UniqueIdentifier>{b9d7055a-d001-419d-88c0-675f7210af00}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="windirent.c">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="win32compat.c">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="wingetopt.c">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\counters.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\execute.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\exitfn.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\hash.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\hashutil.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\language.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\lockfile.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\manifest.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\mdfour.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\stats.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\unify.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\args.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ccache.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cleanup.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\compopt.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\conf.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\getopt_long.c">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\hashtable.c">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\hashtable_itr.c">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\murmurhashneutral2.c">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\snprintf.c">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClCompile>
+    <ClCompile Include="version.c">
+      <Filter>generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.c" />
+    <ClCompile Include="..\src\confitems.c">
+      <Filter>ccache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\confitems_lookup.c">
+      <Filter>generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\envtoconfitems_lookup.c">
+      <Filter>generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="config.h" />
+    <ClInclude Include="windirent.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="wingetopt.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\counters.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hashutil.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\language.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\manifest.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\mdfour.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ccache.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\compopt.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\conf.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\system.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\getopt_long.h">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hashtable.h">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hashtable_itr.h">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hashtable_private.h">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\murmurhashneutral2.h">
+      <Filter>ccache\3rd party sources</Filter>
+    </ClInclude>
+    <ClInclude Include="stub\dirent.h">
+      <Filter>win32\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="stub\sys\file.h">
+      <Filter>win32\stub\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="stub\strings.h">
+      <Filter>win32\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="stub\unistd.h">
+      <Filter>win32\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="stub\utime.h">
+      <Filter>win32\stub</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\confitems.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\envtoconfitems.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hash.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\unify.h">
+      <Filter>ccache</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="long-paths.manifest">
+      <Filter>win32</Filter>
+    </Manifest>
+  </ItemGroup>
+</Project>

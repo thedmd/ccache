@@ -55,7 +55,9 @@
 extern int usleep(useconds_t);
 #endif
 
+#ifndef environ
 extern char **environ;
+#endif
 
 #ifndef ESTALE
 #define ESTALE -1
